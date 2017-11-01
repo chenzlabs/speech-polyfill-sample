@@ -1,0 +1,12 @@
+{
+  "name": "speech-polyfill-sample",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "serve": "http-server"
+  },
+  "devDependencies": {
+    "http-server": "^0.10.0"
+  }
+}

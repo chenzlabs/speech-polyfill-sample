@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>speech-polyfill sample</title>
+</head>
+
+<body>
+    <script src="./speech-polyfill.js"></script>
+    <script>
+
+        window.addEventListener('load', () => {
+            const recognizer = new SpeechRecognition('840815e255664714a82d948ab97d132a');
+            recognizer.interimResults = true;
+            recognizer.contiunous = true;
+            recognizer.maxAlternatives = 6;
+
+            let elem = document.createElement('span');
+            document.body.appendChild(elem);
+
+            recognizer.onresult = e => {
+                elem.innerText = e.results[0][0].transcript;
+
+                if(elem.innerText.toLowerCase().indexOf('stop') != -1){
+                    recognizer.stop();
+                    return;
+                }
+
+                if (e.results[0].isFinal) {
+                    elem.innerText = elem.innerText + " ";
+                    elem = document.createElement('span');
+                    document.body.appendChild(elem);
+
+                    recognizer.start();
+                }
+            };
+
+            recognizer.onerror = (event) => console.log('error', event);
+            recognizer.onnomatch = (event) => console.log('nomatch', event);
+
+            recognizer.onaudiostart = (event) => console.log('audiostart', event);
+            recognizer.onaudioend = (event) => console.log('audioend', event);
+
+            recognizer.onend = (event) => console.log('end', event);
+            recognizer.onstart = (event) => console.log('start', event);
+
+            recognizer.onsoundstart = (event) => console.log('soundstart', event);
+            recognizer.onsoundend = (event) => console.log('soundend', event);
+
+            recognizer.onspeechstart = (event) => console.log('speechstart', event);
+            recognizer.onspeechend = (event) => console.log('speechend', event);
+
+            recognizer.start();
+        });
+    </script>
+</body>
+
+</html>
