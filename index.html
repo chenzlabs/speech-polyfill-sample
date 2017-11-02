@@ -6,6 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>speech-polyfill sample</title>
+    <style>
+        html, body{
+            font-family: "Lucida Console", Monaco, monospace;
+            background: #333333;
+            color: #cccccc;
+        }
+
+        span{
+            color: #666666;
+        }
+
+        .intermediate{
+            text-decoration: unset;
+        }
+
+        .final{
+            color: #cccccc;
+            text-decoration: unset;
+        }
+    </style>
 </head>
 
 <body>
@@ -13,6 +33,7 @@
     <script>
 
         window.addEventListener('load', () => {
+            let shouldContinue = true;
             const recognizer = new SpeechRecognition('840815e255664714a82d948ab97d132a');
             recognizer.interimResults = true;
             recognizer.contiunous = true;
@@ -22,19 +43,17 @@
             document.body.appendChild(elem);
 
             recognizer.onresult = e => {
+                console.log('result', e)
                 elem.innerText = e.results[0][0].transcript;
+                elem.className = "intermediate";
 
-                if(elem.innerText.toLowerCase().indexOf('stop') != -1){
-                    recognizer.stop();
-                    return;
-                }
+                shouldContinue = !elem.innerText.toLowerCase().indexOf('stop') >= 0;
 
                 if (e.results[0].isFinal) {
                     elem.innerText = elem.innerText + " ";
+                    elem.className = "final"
                     elem = document.createElement('span');
                     document.body.appendChild(elem);
-
-                    recognizer.start();
                 }
             };
 
@@ -44,7 +63,12 @@
             recognizer.onaudiostart = (event) => console.log('audiostart', event);
             recognizer.onaudioend = (event) => console.log('audioend', event);
 
-            recognizer.onend = (event) => console.log('end', event);
+            recognizer.onend = (event) => {
+                console.log('end', event);
+                if(shouldContinue){
+                    recognizer.start();
+                }
+            }
             recognizer.onstart = (event) => console.log('start', event);
 
             recognizer.onsoundstart = (event) => console.log('soundstart', event);
