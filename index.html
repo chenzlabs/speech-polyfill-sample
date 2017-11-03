@@ -67,6 +67,7 @@
             recognizer.onaudioend = (event) => console.log('audioend', event);
 
             recognizer.onend = (event) => {
+                recognizer.stop();
                 console.log('end', event);
                 if(shouldContinue){
                     recognizer.start();
