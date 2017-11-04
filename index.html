@@ -39,7 +39,7 @@
             let shouldContinue = true;
             const recognizer = new SpeechRecognition('840815e255664714a82d948ab97d132a');
             recognizer.interimResults = true;
-            recognizer.continuous = true;
+            recognizer.continuous = false;
             recognizer.maxAlternatives = 6;
 
             let elem = document.createElement('span');
